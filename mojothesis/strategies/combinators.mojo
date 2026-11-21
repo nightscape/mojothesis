@@ -1,5 +1,5 @@
-from mojo_pbt.core import TestCase
-from mojo_pbt.core import Strategy, Drawable
+from mojothesis.core import TestCase
+from mojothesis.core import Strategy, Drawable
 
 
 struct Lists[S: Strategy](Strategy):

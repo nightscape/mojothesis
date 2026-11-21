@@ -1,6 +1,6 @@
-from mojo_pbt.core import Status, TestCase
-from mojo_pbt.runner import run_test
-from mojo_pbt.strategies import continue_coin, integers
+from mojothesis.core import Status, TestCase
+from mojothesis.runner import run_test
+from mojothesis.strategies import continue_coin, integers
 
 
 trait StateMachine(Deinitable, Movable):

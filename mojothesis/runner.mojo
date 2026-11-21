@@ -1,6 +1,6 @@
 from std.os import abort
 
-from mojo_pbt.core import Random, Status, TestCase, STOP_TEST
+from mojothesis.core import Random, Status, TestCase, STOP_TEST
 
 comptime Property = def(mut TestCase) raises thin -> None
 comptime BUFFER_SIZE = 8 * 1024

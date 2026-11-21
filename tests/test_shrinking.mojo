@@ -1,8 +1,8 @@
 from std.testing import assert_equal, assert_true, TestSuite
 
-from mojo_pbt.core import TestCase, Strategy
-from mojo_pbt.runner import TestingState
-from mojo_pbt.strategies import booleans, filter_, integers, lists, map_, pair
+from mojothesis.core import TestCase, Strategy
+from mojothesis.runner import TestingState
+from mojothesis.strategies import booleans, filter_, integers, lists, map_, pair
 
 comptime SEEDS = 20
 

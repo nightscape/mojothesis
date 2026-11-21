@@ -1,8 +1,8 @@
 from std.testing import assert_equal, assert_raises, TestSuite
 
-from mojo_pbt.core import TestCase
-from mojo_pbt.stateful import StateMachine, run_state_machine
-from mojo_pbt.strategies import integers
+from mojothesis.core import TestCase
+from mojothesis.stateful import StateMachine, run_state_machine
+from mojothesis.strategies import integers
 
 comptime SEEDS = 20
 

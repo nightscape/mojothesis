@@ -1,4 +1,4 @@
-# mojo-pbt architecture
+# mojothesis architecture
 
 A property-based testing library for Mojo, modelled on minithesis
 (https://github.com/DRMacIver/minithesis), the reference core of Hypothesis.
@@ -106,11 +106,19 @@ stdout/stderr go to a pipe; the runner shows the crash message for the final
 shrunk case only. Plain `debug_assert` does not fire in the default build;
 crashes it guards are only found with `-DASSERT=all`.
 
+## Distribution
+
+Source only: precompiled `.mojoc` files load only in the compiler that built
+them. `main` pins stable Mojo (`>=1.2.0,<1.3.0`); the `nightly` pixi
+environment runs the same tests as a non-blocking CI warning. Users depend on
+the git repo; the `pixi-build-mojo` backend precompiles `mojothesis/` on their
+machine. A `modular-community` recipe can follow for stable releases.
+
 ## Layout
 
-- `mojo_pbt/core.mojo`: `TestCase`, status, random source.
-- `mojo_pbt/strategies/`: the one home for shared generators.
-- `mojo_pbt/runner.mojo`: generate, shrink, report.
+- `mojothesis/core.mojo`: `TestCase`, status, random source.
+- `mojothesis/strategies/`: the one home for shared generators.
+- `mojothesis/runner.mojo`: generate, shrink, report.
 - `tests/`: the library tested with itself.
 
 ## Spike results
@@ -136,7 +144,7 @@ crashes it guards are only found with `-DASSERT=all`.
 
 | Step | cold s | warm s | incremental s |
 |---|---|---|---|
-| `mojo precompile mojo_pbt` | 1.10 | 0.98 | 0.97 |
+| `mojo precompile mojothesis` | 1.10 | 0.98 | 0.97 |
 | `mojo build` test binary | 2.85 | 1.30 | 1.24 |
 | `mojo run` test (compile + run) | 1.20 | 1.25 | 1.19 |
 
@@ -144,6 +152,10 @@ Throughput: 175 LoC/s cold, 385 LoC/s warm (`mojo build`).
 After the fixes (~600 LoC per test binary, `-DASSERT=all`, no pixi overhead):
 114–138 LoC/s cold, 410–442 LoC/s warm. A ~1 s fixed
 cost dominates at this size; track LoC vs time as the code grows.
+
+Stable 1.2.0 vs nightly 1.3.0.dev2026112105 (stateful test binary, 844 LoC,
+`mojo build -DASSERT=all`, incl. ~0.15 s pixi overhead): stable 7.2 s cold /
+1.85 s warm (118 / 460 LoC/s); nightly 5.5 s / 1.55 s (153 / 540 LoC/s).
 
 No incremental compilation: warm and incremental times are equal.
 Times include about 0.15 s `pixi run` overhead.

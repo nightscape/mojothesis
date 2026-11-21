@@ -1,5 +1,5 @@
-from mojo_pbt.core import TestCase
-from mojo_pbt.core import Strategy
+from mojothesis.core import TestCase
+from mojothesis.core import Strategy
 
 
 struct Integers(Strategy):
