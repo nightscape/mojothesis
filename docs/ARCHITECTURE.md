@@ -55,6 +55,39 @@ User misuse raises; internal impossible states `abort`.
 
 Tests run with `-DASSERT=all` so stdlib bounds checks are on.
 
+## Stateful testing
+
+Mojo properties cannot capture state and rules cannot be stored closures, so a
+state machine is a user struct with static dispatch:
+
+```mojo
+trait StateMachine(Deinitable, Movable):
+    comptime RULE_COUNT: Int
+    def __init__(out self) raises                     # fresh model + system under test
+    def rule_name(self, i: Int) -> String
+    def precondition(self, i: Int) -> Bool            # rule i applicable now?
+    def rule(mut self, i: Int, mut tc: TestCase) raises   # draws its own args via tc.any
+    def check_invariants(self) raises
+run_state_machine[M: StateMachine, max_steps: Int = 50](seed, max_examples)
+```
+
+`max_steps` is a compile-time parameter because the generated property is a
+`thin` function and cannot capture runtime values. Steps share the
+`continue_coin` encoding with `lists`. The failure error ends with
+`steps: <rule names>` so tests can assert the shrunk trace. Invariants are
+checked on the initial state and after every executed rule.
+
+`_delete_spans` tries every span size 8..1: a rule step is usually 3 choices
+(coin, index, argument). Known local minimum: a fix that needs a step deleted
+and a value changed in the same edit (e.g. `add 128, double` vs `add 256`).
+
+The runner builds an ordinary property: draw "another step?" (the `lists`
+coin), draw a rule index, skip the step if its precondition is false
+(so the case stays valid and the shrinker can zero the index), run the rule,
+check invariants. A run is one choice sequence, so the existing shrinker
+deletes steps and shrinks rule arguments with no extra code. On replay the
+runner prints the step sequence (`rule_name` plus drawn arguments).
+
 ## Crash isolation
 
 `abort`, failed asserts and out-of-bounds traps end the process (SIGTRAP), so

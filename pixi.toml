@@ -10,4 +10,4 @@ mojo = ">=1.3.0.dev2026112017,<2"
 
 [tasks]
 build = "mkdir -p build && mojo precompile mojo_pbt -o build/mojo_pbt.mojoc"
-test = "mojo run -DASSERT=all -I . tests/test_shrinking.mojo && mojo run -DASSERT=all -I . tests/test_contracts.mojo"
+test = "mojo run -DASSERT=all -I . tests/test_shrinking.mojo && mojo run -DASSERT=all -I . tests/test_contracts.mojo && mojo run -DASSERT=all -I . tests/test_stateful.mojo"

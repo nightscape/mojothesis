@@ -142,7 +142,7 @@ struct TestingState[test: Property]:
                         if self.consider(attempt):
                             i += 1
                     i -= 1
-            k //= 2
+            k -= 1
 
     def _zero_spans(mut self) raises:
         var k = 8

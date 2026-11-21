@@ -23,16 +23,19 @@ struct Lists[S: Strategy](Strategy):
 
     def draw(self, mut tc: TestCase) raises -> List[Self.S.Value]:
         var result = List[Self.S.Value]()
-        while True:
-            if len(result) < self.min_size:
-                _ = tc.forced_choice(1)
-            elif len(result) >= self.max_size:
-                _ = tc.forced_choice(0)
-                break
-            elif not tc.weighted(0.9):
-                break
+        while continue_coin(tc, len(result), self.min_size, self.max_size):
             result.append(self.elements.draw(tc))
         return result^
+
+
+def continue_coin(mut tc: TestCase, size: Int, min_size: Int, max_size: Int) raises -> Bool:
+    """The "continue?" coin drawn before each element of a sequence of `size`
+    elements so far; forced while outside [min_size, max_size)."""
+    if size < min_size:
+        return tc.forced_choice(1) == 1
+    if size >= max_size:
+        return tc.forced_choice(0) == 1
+    return tc.weighted(0.9)
 
 
 def lists[S: Strategy](elements: S, min_size: Int = 0, max_size: Int = Int.MAX) raises -> Lists[S]:
